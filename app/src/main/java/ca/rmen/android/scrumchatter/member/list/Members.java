@@ -25,6 +25,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import ca.rmen.android.scrumchatter.util.Log;
 import ca.rmen.android.scrumchatter.Constants;
 import ca.rmen.android.scrumchatter.R;
@@ -155,7 +160,7 @@ public class Members {
             }
         }
 
-        name += "(deleted)";
+        name += "(deleted: " + new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date()) + ")";
         scheduleUserDelete(memberId, name);
     }
 
