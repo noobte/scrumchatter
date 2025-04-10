@@ -166,7 +166,7 @@ public class Members {
 
             // Query for a member with this name.
             Cursor existingMemberCountCursor = context.getContentResolver().query(MemberColumns.CONTENT_URI, new String[] { "count(*)" },
-                    MemberColumns.NAME + "=? AND " + MemberColumns.TEAM_ID + "=?", new String[] { String.valueOf(input), String.valueOf(teamId) }, null);
+                    MemberColumns.NAME + "=? AND " + MemberColumns.TEAM_ID + "=? AND " + MemberColumns.DELETED + "=0", new String[] { String.valueOf(input), String.valueOf(teamId) }, null);
 
             // Now Check if the team member exists.
             if (existingMemberCountCursor != null) {
