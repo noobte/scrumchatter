@@ -134,17 +134,38 @@ public class Members {
                 mActivity.getString(R.string.dialog_message_delete_member_confirm, member.name), R.id.action_delete_member, extras);
     }
 
+
+
     /**
      * Marks a member as deleted.
      */
     public void deleteMember(final long memberId) {
         Log.v(TAG, "delete member " + memberId);
 
+
+        //get existing user's name
+        String name = "";
+        Cursor existingCursor = mActivity.getContentResolver().query(MemberColumns.CONTENT_URI, new String[] { MemberColumns.NAME },
+                MemberColumns._ID + "=? AND " + MemberColumns.DELETED + "=0", new String[] { String.valueOf(memberId) }, null);
+
+        if (existingCursor != null) {
+            if (existingCursor.moveToFirst()) {
+                name = existingCursor.getString(0) + " ";
+                existingCursor.close();
+            }
+        }
+
+        name += "(deleted)";
+        scheduleUserDelete(memberId, name);
+    }
+
+    private void scheduleUserDelete(final long memberId, final String updatedName){
         // Delete the member in a background thread
         Schedulers.io().scheduleDirect(() -> {
             Uri uri = Uri.withAppendedPath(MemberColumns.CONTENT_URI, String.valueOf(memberId));
             ContentValues values = new ContentValues(1);
             values.put(MemberColumns.DELETED, 1);
+            values.put(MemberColumns.NAME, updatedName);
             mActivity.getContentResolver().update(uri, values, null, null);
         });
     }
